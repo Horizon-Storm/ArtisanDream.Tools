@@ -40,7 +40,7 @@ public class SimpleCharacterController : MonoBehaviour
     {
         MoveCharacter();
         ApplyGravity();
-        KeepCharacterOnXAxis();
+        //KeepCharacterOnXAxis();
     }
 
     /// <summary>
@@ -49,10 +49,15 @@ public class SimpleCharacterController : MonoBehaviour
     private void MoveCharacter()
     {
         // Handle horizontal movement
-        var moveInput = Input.GetAxis("Horizontal");
-        var move = new Vector3(moveInput, 0f, 0f) * (moveSpeed * Time.deltaTime);
-        controller.Move(move);
-
+        var moveHInput = Input.GetAxis("Horizontal");
+        var moveh = new Vector3(moveHInput, 0f, 0f) * (moveSpeed * Time.deltaTime);
+        controller.Move(moveh);
+        
+        // Handle Vertical movement
+        var moveVInput = Input.GetAxis("Vertical");
+        var movev = new Vector3(0f, 0f, moveVInput) * (moveSpeed * Time.deltaTime);
+        controller.Move(movev);
+        
         // Handle jumping
         if (Input.GetButtonDown("Jump"))
         {
@@ -83,11 +88,11 @@ public class SimpleCharacterController : MonoBehaviour
     /// <summary>
     /// Ensures the character remains on the x-axis.
     /// </summary>
-    private void KeepCharacterOnXAxis()
-    {
+    //private void KeepCharacterOnXAxis()
+    //{
         // Lock the z-axis position to maintain 2D movement
-        var currentPosition = thisTransform.position;
-        currentPosition.z = 0f;
-        thisTransform.position = currentPosition;
-    }
+       // var currentPosition = thisTransform.position;
+     //   currentPosition.z = 0f;
+     //   thisTransform.position = currentPosition;
+   // }
 }
