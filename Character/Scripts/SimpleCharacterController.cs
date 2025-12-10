@@ -17,6 +17,12 @@ public class SimpleCharacterController : MonoBehaviour
     [Tooltip("The constant downward force applied by gravity.")]
     public float gravity = -9.81f;
 
+    [Tooltip("The speed at which the character rotates with the mouse.")]
+    public float rotationSpeed = 3f;
+
+    [Tooltip("This is the speed at which the character sprints.")]
+    public float sprintSpeed = 10f;
+
     private CharacterController controller;
     private Vector3 velocity;
     private Transform thisTransform;
@@ -48,16 +54,24 @@ public class SimpleCharacterController : MonoBehaviour
     /// </summary>
     private void MoveCharacter()
     {
-        // Handle horizontal movement
+        // Sprint to increase movement speed pressing shift
+        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : moveSpeed;
+
+        // Handle horizontal and vertical movement input
         var moveHInput = Input.GetAxis("Horizontal");
-        var moveh = new Vector3(moveHInput, 0f, 0f) * (moveSpeed * Time.deltaTime);
-        controller.Move(moveh);
-        
-        // Handle Vertical movement
         var moveVInput = Input.GetAxis("Vertical");
-        var movev = new Vector3(0f, 0f, moveVInput) * (moveSpeed * Time.deltaTime);
-        controller.Move(movev);
-        
+        var move = new Vector3(moveHInput, 0f, moveVInput);
+
+        // Uses the mouse movement for rotation
+        float mouseX = Input.GetAxis("Mouse X");
+        thisTransform.Rotate(Vector3.up * mouseX * rotationSpeed);
+
+        // Rotate the movement direction based on the character's rotation
+        move = thisTransform.TransformDirection(move) * (currentSpeed * Time.deltaTime);
+
+        // Apply movement
+        controller.Move(move);
+
         // Handle jumping
         if (Input.GetButtonDown("Jump"))
         {
